@@ -3,10 +3,10 @@
 ![Modelo isométrico](STL/Imagenes/Captura%20desde%202026-05-25%2014-48-37.png)
 
 **Simulación vertical (2.4 N)**
-<video src="STL/Imagenes/simulacion_vertical.mp4" autoplay loop muted width="600"></video>
+<video src="STL/Imagenes/simulacion_vertical.gif" autoplay loop muted width="600"></video>
 
 **Simulación horizontal (2.4 N)**
-<video src="STL/Imagenes/simulacion_horizontal.mp4" autoplay loop muted width="600"></video>
+<video src="STL/Imagenes/simulacion_horizontal.gif" autoplay loop muted width="600"></video>
 
 Prótesis de pie/pierna para palomas (*Columba livia*) con amputación de miembro inferior, diseñada para impresión 3D en PETG y validada mediante análisis de elementos finitos (FEM) con CalculiX.
 
