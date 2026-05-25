@@ -1,9 +1,9 @@
 # Pata de Paloma V4 — Prótesis de Miembro Inferior para Columbiformes
 
-![Modelo isométrico](imagenes/modelo_isometrico.png)
+![Modelo isométrico](STL/Imagenes/Captura%20desde%202026-05-25%2014-48-37.png)
 
 **Simulación vertical (2.4 N)**
-<video src="STL/imagenes/simulacion_vertical.mp4" autoplay loop muted width="600"></video>
+<video src="STL/Imagenes/simulacion_vertical.mp4" autoplay loop muted width="600"></video>
 
 **Simulación horizontal (2.4 N)**
 <video src="STL/Imagenes/simulacion_horizontal.mp4" autoplay loop muted width="600"></video>
@@ -41,13 +41,13 @@ FreeCAD/
 
 ## Impresión
 
-| Parámetro            | Valor recomendado             |
-| -------------------- | ----------------------------- |
-| Material             | PETG                          |
-| Relleno              | 100%                          |
-| Soporte              | No requerido (pieza completa) |
-| Temperatura boquilla | 230–240 °C                    |
-| Temperatura cama     | 70–80 °C                      |
+| Parámetro | Valor recomendado |
+|---|---|
+| Material | PETG |
+| Relleno | 100% |
+| Soporte | No requerido (pieza completa) |
+| Temperatura boquilla | 230–240 °C |
+| Temperatura cama | 70–80 °C |
 
 ---
 
@@ -84,8 +84,6 @@ Simulación realizada en FreeCAD 1.1.1 + CalculiX. Material: PETG (E = 3150 MPa,
 | 2100 (PETG menor calidad) | 0.287 MPa | 0.150 mm |
 
 Los esfuerzos no varían con E (comportamiento elástico lineal esperado). El diseño es robusto ante variación de calidad del filamento.
-
-> **Nota:** El escenario más crítico es carga lateral a 2.4 N (factor de seguridad ~7.5×). Se recomienda evitar impactos laterales fuertes durante el periodo de adaptación del animal.
 
 ---
 
