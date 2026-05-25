@@ -1,44 +1,702 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prótesis Animales en 3D</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pata de Paloma V4 — Prótesis 3D para Columbiformes</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0e1410;
+      --bg2: #141a10;
+      --bg3: #1a231a;
+      --surface: #1e2a1e;
+      --border: rgba(100,180,100,0.15);
+      --green: #5dcaa5;
+      --green-dim: #3a8a6e;
+      --green-faint: rgba(93,202,165,0.08);
+      --text: #e8ede6;
+      --text-muted: #8a9e88;
+      --text-dim: #536652;
+      --accent: #a8e6cc;
+      --red: #e07070;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2.5rem;
+      background: rgba(14,20,16,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: var(--green);
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 8rem 2.5rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(93,202,165,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--green);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.1s forwards;
+    }
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      line-height: 1.1;
+      font-weight: 400;
+      max-width: 800px;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.2s forwards;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--green);
+    }
+    .hero-sub {
+      margin-top: 1.5rem;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.35s forwards;
+    }
+    .hero-actions {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      margin-top: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.5s forwards;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 0.75rem 1.75rem;
+      background: var(--green);
+      color: #0a1a12;
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 0.75rem 1.75rem;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--green-dim); color: var(--text); }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 2.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      display: flex; align-items: center; gap: 10px;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.8s forwards;
+    }
+    .hero-scroll::before {
+      content: '';
+      display: block; width: 40px; height: 1px;
+      background: var(--text-dim);
+    }
+
+    /* SECTIONS */
+    section { padding: 6rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--green);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+
+    /* IMAGEN + SIMS */
+    .media-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .media-item {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .media-item img, .media-item video {
+      width: 100%; height: auto; display: block;
+    }
+    .media-label {
+      padding: 0.6rem 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      border-top: 1px solid var(--border);
+      letter-spacing: 0.06em;
+    }
+    .media-item-wide {
+      grid-column: 1 / -1;
+    }
+
+    /* FEM RESULTS */
+    .fem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+    .fem-cell {
+      background: var(--bg2);
+      padding: 1.5rem;
+    }
+    .fem-cell-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .fem-cell-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      color: var(--green);
+      line-height: 1;
+    }
+    .fem-cell-unit {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    /* TABLA FEM */
+    .fem-table-wrap { overflow-x: auto; margin-top: 2rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(100,180,100,0.06);
+      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { color: var(--text); }
+    .safe { color: var(--green); }
+    .warn { color: #d4a94f; }
+
+    /* ARCHIVOS */
+    .files-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .file-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.25rem;
+      transition: border-color 0.2s;
+    }
+    .file-card:hover { border-color: var(--green-dim); }
+    .file-icon {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--green);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .file-name {
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .file-desc {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    /* MEJORAS */
+    .mejora-card {
+      background: var(--green-faint);
+      border: 1px solid rgba(93,202,165,0.2);
+      border-radius: 6px;
+      padding: 1.5rem 2rem;
+      margin-top: 2rem;
+    }
+    .mejora-card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .mejora-card p {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+    .badge-experimental {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #d4a94f;
+      border: 1px solid rgba(212,169,79,0.4);
+      border-radius: 3px;
+      padding: 2px 8px;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    /* LIMITACIONES */
+    .limit-list { list-style: none; margin-top: 1.5rem; }
+    .limit-list li {
+      display: flex; gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+    .limit-list li:last-child { border-bottom: none; }
+    .limit-list li::before {
+      content: '—';
+      color: var(--text-dim);
+      flex-shrink: 0;
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* APOYO */
+    .support-section {
+      background: var(--bg3);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .support-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 2.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .support-inner h2 { margin-bottom: 1rem; }
+    .support-inner p { color: var(--text-muted); margin-bottom: 1.5rem; }
+    .kofi-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 0.75rem 1.75rem;
+      background: #ff5e5b;
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: opacity 0.2s;
+    }
+    .kofi-btn:hover { opacity: 0.85; }
+    .freecad-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 0.75rem 1.75rem;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      border-radius: 4px;
+      margin-top: 1rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .freecad-btn:hover { border-color: var(--green-dim); color: var(--text); }
+
+    /* FOOTER */
+    footer {
+      max-width: 1100px; margin: 0 auto;
+      padding: 3rem 2.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--green); }
+
+    /* DIVIDER */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.25rem; }
+      .nav-links { display: none; }
+      section { padding: 4rem 1.25rem; }
+      .hero { padding: 7rem 1.25rem 3rem; }
+      .media-grid { grid-template-columns: 1fr; }
+      .fem-grid { grid-template-columns: 1fr 1fr; }
+      .support-inner { grid-template-columns: 1fr; gap: 2rem; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Prótesis Animales en 3D</h1>
-        <nav>
-            <ul>
-                <li><a href="#proyectos">Proyectos</a></li>
-                <li><a href="#contacto">Contacto</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <section id="proyectos">
-        <h2>Nuestros Proyectos</h2>
-        <p>Descripción de los proyectos de prótesis para animales que hemos desarrollado.</p>
-        <!-- Aquí puedes agregar imágenes o videos de tus proyectos -->
-        <img src="assets/imagenes/protesis1.jpg" alt="Prótesis Animal 1">
-    </section>
+  <nav>
+    <a class="nav-logo" href="#">patitas pa que las quiero</a>
+    <ul class="nav-links">
+      <li><a href="#simulaciones">Simulaciones</a></li>
+      <li><a href="#fem">Resultados FEM</a></li>
+      <li><a href="#archivos">Archivos</a></li>
+      <li><a href="#apoyo">Apoya</a></li>
+      <li><a href="https://github.com/brrt2143/PatitasPaQueLasQuiero" target="_blank">GitHub ↗</a></li>
+    </ul>
+  </nav>
 
-    <section id="contacto">
-        <h2>Contacto</h2>
-        <p>Puedes contactarnos para más información o colaborar en nuestros proyectos.</p>
-        <!-- Formulario de contacto -->
-        <form action="mailto:tu-email@dominio.com" method="get">
-            <input type="email" name="email" placeholder="Tu correo" required>
-            <textarea name="mensaje" placeholder="Tu mensaje" required></textarea>
-            <button type="submit">Enviar</button>
-        </form>
-    </section>
+  <!-- HERO -->
+  <section class="hero" style="max-width:100%; padding-top:10rem;">
+    <p class="hero-tag">Prótesis de código abierto · v4.0 · PETG · FEM validado</p>
+    <h1>Una pata para <em>Columba livia</em></h1>
+    <p class="hero-sub">
+      Prótesis de miembro inferior para palomas diseñada para impresión 3D en PETG,
+      validada mediante análisis de elementos finitos con CalculiX. Libre para usar, modificar y mejorar.
+    </p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://github.com/brrt2143/PatitasPaQueLasQuiero" target="_blank">
+        Descargar STL ↗
+      </a>
+      <a class="btn-secondary" href="#fem">Ver resultados FEM</a>
+    </div>
+    <span class="hero-scroll">scroll para explorar</span>
+  </section>
 
-    <footer>
-        <p>&copy; 2025 Prótesis Animales en 3D. Todos los derechos reservados.</p>
-    </footer>
+  <hr class="divider" />
 
-    <script src="scripts.js"></script>
+  <!-- SIMULACIONES -->
+  <section id="simulaciones">
+    <p class="section-label">01 — Visualización</p>
+    <h2>El diseño en movimiento</h2>
+    <p style="color:var(--text-muted); max-width:560px;">
+      Animaciones de los análisis FEM mostrando la distribución de esfuerzos Von Mises
+      bajo carga vertical y carga lateral máxima (2.4 N).
+    </p>
+    <div class="media-grid">
+      <div class="media-item">
+        <img src="STL/Imagenes/simulacion_vertical.gif" alt="Simulación FEM carga vertical 2.4 N" />
+        <div class="media-label">simulación vertical — 2.4 N · eje Z</div>
+      </div>
+      <div class="media-item">
+        <img src="STL/Imagenes/simulacion_horizontal.gif" alt="Simulación FEM carga horizontal 2.4 N" />
+        <div class="media-label">simulación horizontal — 2.4 N · eje X</div>
+      </div>
+      <div class="media-item media-item-wide">
+        <img src="STL/Imagenes/Captura%20desde%202026-05-25%2014-48-37.png" alt="Modelo isométrico Pata de Paloma V4" style="max-height:400px; object-fit:contain; background:#0e1410;" />
+        <div class="media-label">modelo isométrico — pata de paloma v4 · freecad 1.1.1</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- FEM -->
+  <section id="fem">
+    <p class="section-label">02 — Validación estructural</p>
+    <h2>Resultados FEM</h2>
+    <p style="color:var(--text-muted); max-width:560px; margin-bottom:1rem;">
+      Simulación realizada en FreeCAD 1.1.1 + CalculiX.
+      Material: PETG (E = 3150 MPa, Poisson = 0.38). Límite de fluencia de referencia: ~50 MPa.
+    </p>
+
+    <div class="fem-grid">
+      <div class="fem-cell">
+        <div class="fem-cell-label">Von Mises máx · vertical</div>
+        <div class="fem-cell-value">1.15</div>
+        <div class="fem-cell-unit">MPa · carga 2.4 N</div>
+      </div>
+      <div class="fem-cell">
+        <div class="fem-cell-label">Factor de seguridad</div>
+        <div class="fem-cell-value">43×</div>
+        <div class="fem-cell-unit">sobre límite PETG</div>
+      </div>
+      <div class="fem-cell">
+        <div class="fem-cell-label">Desplazamiento máx</div>
+        <div class="fem-cell-value">0.39</div>
+        <div class="fem-cell-unit">mm · carga 2.4 N</div>
+      </div>
+    </div>
+
+    <div class="fem-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Escenario</th>
+            <th>Carga</th>
+            <th>Von Mises máx</th>
+            <th>Desplazamiento</th>
+            <th>F. seguridad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Vertical (Z)</td>
+            <td>0.6 N</td>
+            <td class="safe">0.287 MPa</td>
+            <td>0.097 mm</td>
+            <td class="safe">~174×</td>
+          </tr>
+          <tr>
+            <td>Vertical (Z)</td>
+            <td>2.4 N</td>
+            <td class="safe">1.15 MPa</td>
+            <td>0.39 mm</td>
+            <td class="safe">~43×</td>
+          </tr>
+          <tr>
+            <td>Lateral (X)</td>
+            <td>0.6 N</td>
+            <td class="safe">1.66 MPa</td>
+            <td>0.72 mm</td>
+            <td class="safe">~30×</td>
+          </tr>
+          <tr>
+            <td>Lateral (X)</td>
+            <td>2.4 N</td>
+            <td class="warn">6.64 MPa</td>
+            <td>2.86 mm</td>
+            <td class="warn">~7.5×</td>
+          </tr>
+          <tr>
+            <td>Frontal (Y)</td>
+            <td>0.6 N</td>
+            <td class="safe">1.054 MPa</td>
+            <td>0.55 mm</td>
+            <td class="safe">~47×</td>
+          </tr>
+          <tr>
+            <td>Frontal (Y)</td>
+            <td>2.4 N</td>
+            <td class="safe">4.22 MPa</td>
+            <td>2.20 mm</td>
+            <td class="safe">~12×</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ARCHIVOS -->
+  <section id="archivos">
+    <p class="section-label">03 — Descarga</p>
+    <h2>Archivos del proyecto</h2>
+    <p style="color:var(--text-muted); max-width:560px;">
+      Todos los archivos disponibles libremente bajo licencia CC BY 4.0.
+    </p>
+    <div class="files-grid">
+      <div class="file-card">
+        <div class="file-icon">STL</div>
+        <div class="file-name">Pieza completa</div>
+        <div class="file-desc">Fusion004.stl — imprime todo en una sola vez</div>
+      </div>
+      <div class="file-card">
+        <div class="file-icon">STL</div>
+        <div class="file-name">Socket</div>
+        <div class="file-desc">ExtrusionSocket.stl — fijación al muñón</div>
+      </div>
+      <div class="file-card">
+        <div class="file-icon">STL</div>
+        <div class="file-name">Tibiotarso</div>
+        <div class="file-desc">ExtrusionTibiotarso.stl — segmento tibial</div>
+      </div>
+      <div class="file-card">
+        <div class="file-icon">STL</div>
+        <div class="file-name">Articulación</div>
+        <div class="file-desc">ExtrusionArticulacion.stl — tibiotarsal</div>
+      </div>
+      <div class="file-card">
+        <div class="file-icon">STL</div>
+        <div class="file-name">Tarsometatarso</div>
+        <div class="file-desc">ExtrusionTarsometatarso.stl — metatarsal</div>
+      </div>
+      <div class="file-card">
+        <div class="file-icon">FCStd</div>
+        <div class="file-name">Fuente FreeCAD</div>
+        <div class="file-desc">Pata_de_PalomaV4.1.FCStd — editable</div>
+      </div>
+    </div>
+    <div style="margin-top:2rem;">
+      <a class="btn-primary" href="https://github.com/brrt2143/PatitasPaQueLasQuiero" target="_blank">
+        Ver repositorio completo ↗
+      </a>
+    </div>
+
+    <div class="mejora-card" style="margin-top:3rem;">
+      <h3>Articulación en TPU <span class="badge-experimental">no probado</span></h3>
+      <p>
+        Es posible imprimir <code style="font-family:'DM Mono',monospace; font-size:13px; color:var(--accent);">ExtrusionArticulacion.stl</code> en TPU
+        para mejorar la elasticidad y absorción de impactos. Esta modificación no ha sido
+        simulada por limitaciones computacionales — se incluye como sugerencia para quienes
+        quieran iterar sobre el diseño.
+      </p>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- LIMITACIONES -->
+  <section>
+    <p class="section-label">04 — Limitaciones</p>
+    <h2>Lo que este diseño no es</h2>
+    <ul class="limit-list">
+      <li>Diseño mono-material (PETG). Una versión multi-material con TPU en la planta mejoraría la amortiguación, pero requiere simulación adicional.</li>
+      <li>No incluye dedo posterior (hallux). El diseño se limita a la estructura de apoyo principal.</li>
+      <li>No ha sido probado en animales reales. Los resultados FEM son teóricos bajo condiciones estáticas lineales.</li>
+      <li>El escenario más crítico es carga lateral a 2.4 N (factor de seguridad ~7.5×). Se recomienda supervisión durante el periodo de adaptación.</li>
+    </ul>
+  </section>
+
+  <!-- APOYO -->
+  <div class="support-section" id="apoyo">
+    <div class="support-inner">
+      <div>
+        <p class="section-label">05 — Apoya</p>
+        <h2>Este proyecto es libre y siempre lo será</h2>
+        <p>
+          Si este diseño te fue útil o quieres que el proyecto siga creciendo,
+          puedes apoyar directamente al autor.
+        </p>
+        <a class="kofi-btn" href="https://ko-fi.com/brayanramirez6461" target="_blank">
+          ☕ Apoyar en Ko-fi
+        </a>
+      </div>
+      <div>
+        <p class="section-label" style="margin-top:0;">Herramientas utilizadas</p>
+        <h2 style="font-size:1.5rem;">Hecho con FreeCAD</h2>
+        <p>
+          Todo el diseño y la simulación FEM fue realizado en FreeCAD,
+          software libre y de código abierto. Si lo usas, considera apoyar su desarrollo.
+        </p>
+        <a class="freecad-btn" href="https://www.freecad.org/donate.php" target="_blank">
+          Donar a FreeCAD ↗
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span class="footer-copy">© 2026 Brayan Ramírez (brrt2143) · CC BY 4.0</span>
+    <div class="footer-links">
+      <a href="https://github.com/brrt2143/PatitasPaQueLasQuiero" target="_blank">GitHub</a>
+      <a href="https://ko-fi.com/brayanramirez6461" target="_blank">Ko-fi</a>
+      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Licencia</a>
+    </div>
+  </footer>
+
 </body>
 </html>
