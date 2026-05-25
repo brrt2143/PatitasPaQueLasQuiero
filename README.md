@@ -3,10 +3,10 @@
 ![Modelo isométrico](imagenes/modelo_isometrico.png)
 
 **Simulación vertical (2.4 N)**
-<video src="imagenes/simulacion_vertical.mp4" autoplay loop muted width="600"></video>
+<video src="/STL/imagenes/simulacion_vertical.mp4" autoplay loop muted width="600"></video>
 
 **Simulación horizontal (2.4 N)**
-<video src="imagenes/simulacion_horizontal.mp4" autoplay loop muted width="600"></video>
+<video src="/STL/imagenes/simulacion_horizontal.mp4" autoplay loop muted width="600"></video>
 
 Prótesis de pie/pierna para palomas (*Columba livia*) con amputación de miembro inferior, diseñada para impresión 3D en PETG y validada mediante análisis de elementos finitos (FEM) con CalculiX.
 
@@ -117,8 +117,6 @@ Es posible sustituir la pieza `ExtrusionArticulacion.stl` por una versión impre
 [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
 
 Puedes usar, modificar y distribuir este diseño libremente con atribución al autor original. Esta licencia aplica a todos los archivos STL y FreeCAD del repositorio.
-
-> **Nota:** El archivo LICENSE del repositorio actualmente es MIT. Para alinearlo con CC BY 4.0, reemplaza su contenido con el texto de la licencia CC BY 4.0 disponible en [creativecommons.org](https://creativecommons.org/licenses/by/4.0/legalcode).
 
 ---
 
